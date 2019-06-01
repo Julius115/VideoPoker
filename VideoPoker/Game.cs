@@ -11,10 +11,12 @@ namespace VideoPoker
         List<Card> deck = new List<Card>();
         Card[] dealtCards = new Card[5];
 
+        Reader reader = new Reader();
+
         Random random = new Random();
 
-        private int balance = 0;
-        private int betSize = 0;
+        public static int balance = 0;
+        public static int betSize = 0;
         private int result = 0;
 
         public void Start()
@@ -22,7 +24,7 @@ namespace VideoPoker
             Console.WriteLine("Welcome to Video Poker \"Jacks or Better\" game\n");
             Console.WriteLine("Enter your starting balance:");
 
-            balance = GetBalance();
+            balance = reader.GetBalance();
 
             Console.WriteLine();
 
@@ -93,7 +95,7 @@ namespace VideoPoker
 
         private void InitializeGame()
         {
-            betSize = ReadBetSize();
+            betSize = reader.GetBetSize();
             balance -= betSize;
 
             Console.Clear();
@@ -104,7 +106,7 @@ namespace VideoPoker
 
         private void ChangeCards()
         {
-            List<int> inputOfCardsIndexesToKeep = ReadIndexesToKeep();
+            List<int> inputOfCardsIndexesToKeep = reader.GetIndexesToKeep();
 
             List<int> tempIndexes = new List<int>() { 1, 2, 3, 4, 5 };
 
@@ -117,70 +119,6 @@ namespace VideoPoker
 
             DealCards();
             return;
-        }
-
-        private List<int> ReadIndexesToKeep()
-        {
-            List<int> inputOfCardsIndexesToKeep = new List<int>();
-            bool isInputValid;
-            
-            do
-            {
-                Console.WriteLine("\nEnter indexes of cards you want to keep(numbers separated with single space):");
-                string[] tempinputOfCardsIndexesToKeep = Console.ReadLine().Split(' ');
-
-                if (tempinputOfCardsIndexesToKeep.Length == 1 && String.IsNullOrEmpty(tempinputOfCardsIndexesToKeep[0]))
-                {
-                    break;
-                }
-
-                isInputValid = IsDigitsOnly(tempinputOfCardsIndexesToKeep);
-
-                if (isInputValid)
-                {
-                    inputOfCardsIndexesToKeep = Array.ConvertAll(tempinputOfCardsIndexesToKeep, int.Parse).ToList();
-                    if (inputOfCardsIndexesToKeep.Any(a => a > 5 || a < 1) || inputOfCardsIndexesToKeep.Count > 5)
-                    {
-                        isInputValid = false;
-                    }
-                }
-
-            } while (!isInputValid);
-
-            return inputOfCardsIndexesToKeep;
-        }
-
-        private int GetBalance()
-        {
-            int balance;
-            string tempBalance = Console.ReadLine();
-
-            while (!Int32.TryParse(tempBalance, out balance) || balance <= 0)
-            {
-                if (Int32.TryParse(tempBalance, out int a) && a <= 0)
-                {
-                    Console.WriteLine("Balance must be positive");
-                }
-                else
-                {
-                    Console.WriteLine("Enter your starting balance as a number: ");
-                }
-                tempBalance = Console.ReadLine();
-            }
-            return balance;
-        }
-
-        private List<Card> GeneratePlayCards()
-        {
-            int[] randomizedCardsIndexes = Enumerable.Range(0, 52).ToArray().OrderBy(x => random.Next()).ToArray();
-            List<Card> playCards = new List<Card>();
-
-            for (int i = 0; i < 10; i++)
-            {
-                playCards.Add(deck[randomizedCardsIndexes[i]]);
-            }
-
-            return playCards;
         }
 
         private List<Card> GenerateDeck()
@@ -207,7 +145,7 @@ namespace VideoPoker
             return shuffledDeck;
         }
 
-        private bool IsDigitsOnly(string[] str)
+        public static bool IsDigitsOnly(string[] str)
         {
             foreach (string s in str)
             {
@@ -218,35 +156,5 @@ namespace VideoPoker
             }
             return true;
         }
-
-        private int ReadBetSize()
-        {
-            Console.WriteLine("Enter bet size:");
-            string tempBetSize = Console.ReadLine();
-            int betSize;
-
-            while (!Int32.TryParse(tempBetSize, out betSize) || betSize <= 0 || ((balance - betSize) < 0))
-            {
-                if (!Int32.TryParse(tempBetSize, out int a))
-                {
-                    Console.WriteLine("Enter bet size as a number:");
-                }
-                else if (betSize <= 0)
-                {
-                    Console.WriteLine("Bet size must be positive");
-                    Console.WriteLine("Enter bet size:");
-                }
-                else if ((balance - betSize) < 0)
-                {
-                    Console.WriteLine("Your entered bet size: " + betSize + " is bigger than your balance: " + balance);
-                    Console.WriteLine("Enter bet size between 1 and " + balance);
-                }
-
-                tempBetSize = Console.ReadLine();
-            }
-
-            return betSize;
-        }
-
     }
 }
