@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VideoPoker
 {
-    public enum CardRanksEnum
+    public enum CardRanks
     {
         Two = 2,
         Three,
@@ -23,7 +23,7 @@ namespace VideoPoker
         Ace
     }
 
-    public enum CardSuitsEnum
+    public enum CardSuits
     {
         Diamonds,
         Clubs,
@@ -33,10 +33,10 @@ namespace VideoPoker
 
     class Card
     {
-        public CardRanksEnum Rank { get; set; }
-        public CardSuitsEnum Suit { get; set; }
+        public CardRanks Rank { get; set; }
+        public CardSuits Suit { get; set; }
 
-        public Card(CardRanksEnum cardRank, CardSuitsEnum cardSuit)
+        public Card(CardRanks cardRank, CardSuits cardSuit)
         {
             Rank = cardRank;
             Suit = cardSuit;

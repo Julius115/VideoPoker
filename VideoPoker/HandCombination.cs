@@ -6,30 +6,30 @@ using System.Threading.Tasks;
 
 namespace VideoPoker
 {
-    public enum HandCombinationTypesEnum
+    public enum HandCombinationTypes
     {
         AllOther,
         JacksOrBetter,
         TwoPair,
         ThreeOfAKind,
         Straight,
-        Flush,
-        FullHouse,
-        FourOfAKind,
-        StraightFlush,
-        RoyalFlush
+        Flush = 6,
+        FullHouse = 9,
+        FourOfAKind = 25,
+        StraightFlush = 50,
+        RoyalFlush = 800
     }
 
     class HandCombination
     {
-        public static HandCombinationTypesEnum GetHandCombination(List<Card> playCards)
+        public static HandCombinationTypes GetHandCombination(List<Card> playCards)
         {
             bool isFlush = true;
             bool isStraight = true;
             bool isThreeOfAKind = false;
             bool isFourOfAKind = false;
 
-            CardSuitsEnum suit = playCards[0].Suit;
+            CardSuits suit = playCards[0].Suit;
 
             foreach(Card card in playCards)
             {
@@ -40,7 +40,7 @@ namespace VideoPoker
                 }
             }
 
-            List<CardRanksEnum> ranks = new List<CardRanksEnum>();
+            List<CardRanks> ranks = new List<CardRanks>();
 
             foreach(Card card in playCards)
             {
@@ -49,7 +49,7 @@ namespace VideoPoker
 
             List<Card> orderedCards = playCards.OrderBy(i => i.Rank).ToList();
 
-            CardRanksEnum cardRank = orderedCards[0].Rank;
+            CardRanks cardRank = orderedCards[0].Rank;
 
             for (int i = 1; i < 5; i++)
             {
@@ -93,53 +93,53 @@ namespace VideoPoker
             {
                 if (isFlush)
                 {
-                    if (orderedCards[0].Rank == CardRanksEnum.Ten)
+                    if (orderedCards[0].Rank == CardRanks.Ten)
                     {
-                        return HandCombinationTypesEnum.RoyalFlush;
+                        return HandCombinationTypes.RoyalFlush;
                     }
                     else
                     {
-                        return HandCombinationTypesEnum.StraightFlush;
+                        return HandCombinationTypes.StraightFlush;
                     }
                 }
                 else
                 {
-                    return HandCombinationTypesEnum.Straight;
+                    return HandCombinationTypes.Straight;
                 }
 
             }
 
             if (isFlush)
             {
-                return HandCombinationTypesEnum.Flush;
+                return HandCombinationTypes.Flush;
             }
 
             if (isFourOfAKind)
             {
-                return HandCombinationTypesEnum.FourOfAKind;
+                return HandCombinationTypes.FourOfAKind;
             }
 
             if (isThreeOfAKind)
             {
                 if(pairs.Count == 2)
                 {
-                    return HandCombinationTypesEnum.FullHouse;
+                    return HandCombinationTypes.FullHouse;
                 }
 
-                return HandCombinationTypesEnum.ThreeOfAKind;
+                return HandCombinationTypes.ThreeOfAKind;
             }
 
             if (pairs.Count == 2)
             {
-                return HandCombinationTypesEnum.TwoPair;
+                return HandCombinationTypes.TwoPair;
             }
 
-            if(pairs.Count == 1 && pairs[0].Rank >= CardRanksEnum.Jack)
+            if(pairs.Count == 1 && pairs[0].Rank >= CardRanks.Jack)
             {
-                return HandCombinationTypesEnum.JacksOrBetter;
+                return HandCombinationTypes.JacksOrBetter;
             }
 
-            return HandCombinationTypesEnum.AllOther;
+            return HandCombinationTypes.AllOther;
         }
     }
 }

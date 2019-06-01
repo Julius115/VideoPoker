@@ -22,27 +22,13 @@ namespace VideoPoker
             Console.WriteLine("Welcome to Video Poker \"Jacks or Better\" game\n");
             Console.WriteLine("Enter your starting balance:");
 
-            string tempBalance = Console.ReadLine();
-
-            while (!Int32.TryParse(tempBalance, out balance) || balance == 0)
-            {
-                if (Int32.TryParse(tempBalance, out int a) && a == 0)
-                {
-                    Console.WriteLine("Balance can't be 0");
-                }
-                else
-                {
-                    Console.WriteLine("Enter your starting balance as a number: ");
-                }
-                tempBalance = Console.ReadLine();
-            }
+            balance = GetBalance();
 
             Console.WriteLine();
 
             while (true)
             {
-                List<Card> playCards = new List<Card>();
-                int[] randomCardsIndexes = GenerateRandomCardsIndexes();
+                List<Card> playCards = GeneratePlayCards();
 
                 betSize = GetBetSize();
                 balance -= betSize;
@@ -53,16 +39,15 @@ namespace VideoPoker
 
                 for (int i = 0; i < 5; i++)
                 {
-                    playCards.Add(deck[randomCardsIndexes[i]]);
-                    Console.WriteLine((i + 1) + ": " + deck[randomCardsIndexes[i]].Rank + " of " + deck[randomCardsIndexes[i]].Suit);
+                    Console.WriteLine((i + 1) + ": " + playCards[i].Rank + " of " + playCards[i].Suit);
                 }
 
                 List<int> cardsIndexesToChange = GetCardsIndexesToKeep();
 
                 for (int i = 0; i < cardsIndexesToChange.Count; i++)
                 {
-                    playCards[cardsIndexesToChange[i]].Rank = deck[randomCardsIndexes[i + 5]].Rank;
-                    playCards[cardsIndexesToChange[i]].Suit = deck[randomCardsIndexes[i + 5]].Suit;
+                    playCards[cardsIndexesToChange[i]].Rank = playCards[i + 5].Rank;
+                    playCards[cardsIndexesToChange[i]].Suit = playCards[i + 5].Suit;
                 }
 
                 Console.Clear();
@@ -73,12 +58,16 @@ namespace VideoPoker
                     Console.WriteLine((i + 1) + ": " + playCards[i].Rank + " of " + playCards[i].Suit);
                 }
 
-                HandCombinationTypesEnum handCombination = HandCombination.GetHandCombination(playCards);
+                HandCombinationTypes handCombination = HandCombination.GetHandCombination(playCards);
 
                 result = betSize * (int)handCombination;
                 balance += result;
 
-                if(balance == 0)
+                Console.WriteLine("\n" + handCombination + "\n");
+                Console.WriteLine("You have won : " + result + ", your balance now is: " + balance);
+
+
+                if (balance == 0)
                 {
                     Console.WriteLine("\nYou lost all your balance\n");
                     Console.WriteLine("Press any key to exit...");
@@ -86,13 +75,59 @@ namespace VideoPoker
                     return;
                 }
 
-                Console.WriteLine("\n" + handCombination + "\n");
-                Console.WriteLine("You have won : " + result + ", your balance now is: " + balance);
                 Console.WriteLine("\nPress any key to play again");
 
                 Console.ReadKey();
                 Console.Clear();
             }
+        }
+
+        private int GetBalance()
+        {
+            int balance;
+            string tempBalance = Console.ReadLine();
+
+            while (!Int32.TryParse(tempBalance, out balance) || balance <= 0)
+            {
+                if (Int32.TryParse(tempBalance, out int a) && a <= 0)
+                {
+                    Console.WriteLine("Balance must be positive");
+                }
+                else
+                {
+                    Console.WriteLine("Enter your starting balance as a number: ");
+                }
+                tempBalance = Console.ReadLine();
+            }
+            return balance;
+        }
+
+        private List<Card> GeneratePlayCards()
+        {
+            int[] randomCardsIndexes = new int[10];
+
+            for (int i = 0; i < randomCardsIndexes.Length; i++)
+            {
+                randomCardsIndexes[i] = -1;
+
+                while (randomCardsIndexes[i] == -1)
+                {
+                    int tempRandomCardIndex = random.Next(52);
+
+                    if (!randomCardsIndexes.Contains(tempRandomCardIndex))
+                    {
+                        randomCardsIndexes[i] = tempRandomCardIndex;
+                    }
+                }
+            }
+
+            List<Card> playCards = new List<Card>();
+            for(int i = 0; i < randomCardsIndexes.Length; i++)
+            {
+                playCards.Add(deck[randomCardsIndexes[i]]);
+            }
+
+            return playCards;
         }
 
         private List<Card> GenerateDeck()
@@ -103,34 +138,12 @@ namespace VideoPoker
             {
                 for (int j = 0; j < 4; j++)
                 {
-                    Card card = new Card((CardRanksEnum)i, (CardSuitsEnum)j);
+                    Card card = new Card((CardRanks)i, (CardSuits)j);
                     deck.Add(card);
                 }
             }
 
             return deck;
-        }
-
-        private int[] GenerateRandomCardsIndexes()
-        {
-            int[] randomCardsIndexes = new int[10];
-
-            for (int randomCardIndex = 0; randomCardIndex < randomCardsIndexes.Length; randomCardIndex++)
-            {
-                randomCardsIndexes[randomCardIndex] = -1;
-
-                while (randomCardsIndexes[randomCardIndex] == -1)
-                {
-                    int tempRandomCardIndex = random.Next(52);
-
-                    if (!randomCardsIndexes.Contains(tempRandomCardIndex))
-                    {
-                        randomCardsIndexes[randomCardIndex] = tempRandomCardIndex;
-                    }
-                }
-            }
-
-            return randomCardsIndexes;
         }
 
         private List<int> GetCardsIndexesToKeep()
@@ -147,7 +160,6 @@ namespace VideoPoker
 
                 if (tempinputOfCardsIndexesToKeep.Length == 1 && String.IsNullOrEmpty(tempinputOfCardsIndexesToKeep[0]))
                 {
-                    Console.WriteLine("tuscias listas");
                     break;
                 }
 
@@ -193,15 +205,15 @@ namespace VideoPoker
             string tempBetSize = Console.ReadLine();
             int betSize;
 
-            while (!Int32.TryParse(tempBetSize, out betSize) || betSize == 0 || ((balance - betSize) < 0))
+            while (!Int32.TryParse(tempBetSize, out betSize) || betSize <= 0 || ((balance - betSize) < 0))
             {
                 if (!Int32.TryParse(tempBetSize, out int a))
                 {
                     Console.WriteLine("Enter bet size as a number:");
                 }
-                else if (betSize == 0)
+                else if (betSize <= 0)
                 {
-                    Console.WriteLine("Bet size can't be 0");
+                    Console.WriteLine("Bet size must be positive");
                     Console.WriteLine("Enter bet size:");
                 }
                 else if ((balance - betSize) < 0)
