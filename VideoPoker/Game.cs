@@ -79,20 +79,14 @@ namespace VideoPoker
         {
 
             List<int> inputOfCardsIndexesToKeep = GetIndexesToKeep();
-            List<int> cardsIndexesToChange = new List<int>();
 
-            for (int i = 0; i < 5; i++)
-            {
-                if (!inputOfCardsIndexesToKeep.Any(a => a == i + 1))
-                {
-                    cardsIndexesToChange.Add(i);
-                }
-            }
+            List<int> tempIndexes = new List<int>() { 1, 2, 3, 4, 5 };
+
+            List<int> cardsIndexesToChange = tempIndexes.Except(inputOfCardsIndexesToKeep).ToList();
 
             for (int i = 0; i < cardsIndexesToChange.Count; i++)
             {
-                playCards[cardsIndexesToChange[i]] = playCards[i + 5];
-                //playCards[cardsIndexesToChange[i]].Suit = playCards[i + 5].Suit;
+                playCards[cardsIndexesToChange[i]-1] = playCards[i + 5];
             }
 
         }
