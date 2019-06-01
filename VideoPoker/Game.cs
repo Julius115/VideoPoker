@@ -9,6 +9,8 @@ namespace VideoPoker
     class Game
     {
         List<Card> deck = new List<Card>();
+        Card[] dealtCards = new Card[5];
+
         Random random = new Random();
 
         private int balance = 0;
@@ -17,8 +19,6 @@ namespace VideoPoker
 
         public void Start()
         {
-            deck = GenerateDeck();
-
             Console.WriteLine("Welcome to Video Poker \"Jacks or Better\" game\n");
             Console.WriteLine("Enter your starting balance:");
 
@@ -26,59 +26,85 @@ namespace VideoPoker
 
             Console.WriteLine();
 
-            while (true)
+            while (balance != 0)
             {
-                List<Card> playCards = GeneratePlayCards();
+                deck = GenerateDeck();
+                dealtCards = new Card[5];
 
-                betSize = GetBetSize();
-                balance -= betSize;
+                DealCards();
 
-                Console.Clear();
-                Console.WriteLine("New game began\n");
-                Console.WriteLine("Initial cards:\n");
+                InitializeGame();
 
                 for (int i = 0; i < 5; i++)
                 {
-                    Console.WriteLine((i + 1) + ": " + playCards[i].ToString());
+                    Console.WriteLine((i + 1) + ": " + dealtCards[i].ToString());
                 }
 
-                ChangeCards(ref playCards);
+                ChangeCards();
 
                 Console.Clear();
                 Console.WriteLine("Play cards after change:\n");
 
                 for (int i = 0; i < 5; i++)
                 {
-                    Console.WriteLine((i + 1) + ": " + playCards[i].ToString());
+                    Console.WriteLine((i + 1) + ": " + dealtCards[i].ToString());
                 }
 
-                HandCombinationTypes handCombination = HandCombination.GetHandCombination(playCards.Take(5).ToList());
+                PrintGameResult(dealtCards.Take(5).ToList());
 
-                result = betSize * (int)handCombination;
-                balance += result;
-
-                Console.WriteLine("\n" + handCombination + "\n");
-                Console.WriteLine("You have won : " + result + ", your balance now is: " + balance);
-
-                if (balance == 0)
-                {
-                    Console.WriteLine("\nYou lost all your balance\n");
-                    Console.WriteLine("Press any key to exit...");
-                    Console.ReadKey();
-                    return;
-                }
-
-                Console.WriteLine("\nPress any key to play again");
-
-                Console.ReadKey();
                 Console.Clear();
             }
         }
 
-        private void ChangeCards(ref List<Card> playCards)
+        private void DealCards()
         {
+            for(int i = 0; i < 5; i++)
+            {
+                if(dealtCards[i] == null)
+                {
+                    dealtCards[i] = deck[0];
+                    deck.Remove(deck[0]);
+                }
+            }
+        }
 
-            List<int> inputOfCardsIndexesToKeep = GetIndexesToKeep();
+        private void PrintGameResult(List<Card> playCards)
+        {
+            HandCombinationTypes handCombination = HandCombination.GetHandCombination(playCards);
+
+            result = betSize * (int)handCombination;
+            balance += result;
+
+            Console.WriteLine("\n" + handCombination + "\n");
+            Console.WriteLine("You have won : " + result + ", your balance now is: " + balance);
+
+            if (balance == 0)
+            {
+                Console.WriteLine("\nYou lost all your balance\n");
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("\nPress any key to play again");
+
+            Console.ReadKey();
+        }
+
+        private void InitializeGame()
+        {
+            betSize = ReadBetSize();
+            balance -= betSize;
+
+            Console.Clear();
+            Console.WriteLine("New game began\n");
+            Console.WriteLine("Initial cards:\n");
+        }
+
+
+        private void ChangeCards()
+        {
+            List<int> inputOfCardsIndexesToKeep = ReadIndexesToKeep();
 
             List<int> tempIndexes = new List<int>() { 1, 2, 3, 4, 5 };
 
@@ -86,16 +112,18 @@ namespace VideoPoker
 
             for (int i = 0; i < cardsIndexesToChange.Count; i++)
             {
-                playCards[cardsIndexesToChange[i]-1] = playCards[i + 5];
+                dealtCards[cardsIndexesToChange[i]-1] = null;
             }
 
+            DealCards();
+            return;
         }
 
-        private List<int> GetIndexesToKeep()
+        private List<int> ReadIndexesToKeep()
         {
             List<int> inputOfCardsIndexesToKeep = new List<int>();
             bool isInputValid;
-
+            
             do
             {
                 Console.WriteLine("\nEnter indexes of cards you want to keep(numbers separated with single space):");
@@ -168,7 +196,15 @@ namespace VideoPoker
                 }
             }
 
-            return deck;
+            List<Card> shuffledDeck = new List<Card>();
+
+            int[] randomCardsIndexes = Enumerable.Range(0, 52).ToArray().OrderBy(x => random.Next()).ToArray();
+            for (int i = 0; i < 52; i++)
+            {
+                shuffledDeck.Add(deck[randomCardsIndexes[i]]);
+            }
+
+            return shuffledDeck;
         }
 
         private bool IsDigitsOnly(string[] str)
@@ -183,7 +219,7 @@ namespace VideoPoker
             return true;
         }
 
-        private int GetBetSize()
+        private int ReadBetSize()
         {
             Console.WriteLine("Enter bet size:");
             string tempBetSize = Console.ReadLine();
