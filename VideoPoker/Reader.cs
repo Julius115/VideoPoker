@@ -23,7 +23,7 @@ namespace VideoPoker
                     break;
                 }
 
-                isInputValid = Game.IsDigitsOnly(tempinputOfCardsIndexesToKeep);
+                isInputValid = IsDigitsOnly(tempinputOfCardsIndexesToKeep);
 
                 if (isInputValid)
                 {
@@ -59,13 +59,13 @@ namespace VideoPoker
             return balance;
         }
 
-        public int GetBetSize()
+        public int GetBetSize(ref int balance)
         {
             Console.WriteLine("Enter bet size:");
             string tempBetSize = Console.ReadLine();
             int betSize;
 
-            while (!Int32.TryParse(tempBetSize, out betSize) || betSize <= 0 || ((Game.balance - betSize) < 0))
+            while (!Int32.TryParse(tempBetSize, out betSize) || betSize <= 0 || ((balance - betSize) < 0))
             {
                 if (!Int32.TryParse(tempBetSize, out int a))
                 {
@@ -76,16 +76,28 @@ namespace VideoPoker
                     Console.WriteLine("Bet size must be positive");
                     Console.WriteLine("Enter bet size:");
                 }
-                else if ((Game.balance - betSize) < 0)
+                else if ((balance - betSize) < 0)
                 {
-                    Console.WriteLine("Your entered bet size: " + betSize + " is bigger than your balance: " + Game.balance);
-                    Console.WriteLine("Enter bet size between 1 and " + Game.balance);
+                    Console.WriteLine("Your entered bet size: " + betSize + " is bigger than your balance: " + balance);
+                    Console.WriteLine("Enter bet size between 1 and " + balance);
                 }
 
                 tempBetSize = Console.ReadLine();
             }
 
             return betSize;
+        }
+
+        private bool IsDigitsOnly(string[] str)
+        {
+            foreach (string s in str)
+            {
+                if (!int.TryParse(s, out int n))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

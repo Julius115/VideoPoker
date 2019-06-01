@@ -12,11 +12,10 @@ namespace VideoPoker
         Card[] dealtCards = new Card[5];
 
         Reader reader = new Reader();
+        Dealer dealer = new Dealer();
 
-        Random random = new Random();
-
-        public static int balance = 0;
-        public static int betSize = 0;
+        private int balance = 0;
+        private int betSize = 0;
         private int result = 0;
 
         public void Start()
@@ -30,19 +29,20 @@ namespace VideoPoker
 
             while (balance != 0)
             {
-                deck = GenerateDeck();
+                InitializeGame();
+
+                deck = dealer.GenerateDeck();
+
                 dealtCards = new Card[5];
 
-                DealCards();
-
-                InitializeGame();
+                dealer.DealCards(ref dealtCards, ref deck);
 
                 for (int i = 0; i < 5; i++)
                 {
                     Console.WriteLine((i + 1) + ": " + dealtCards[i].ToString());
                 }
 
-                ChangeCards();
+                dealer.ChangeCards(ref dealtCards, ref deck);
 
                 Console.Clear();
                 Console.WriteLine("Play cards after change:\n");
@@ -55,18 +55,6 @@ namespace VideoPoker
                 PrintGameResult(dealtCards.Take(5).ToList());
 
                 Console.Clear();
-            }
-        }
-
-        private void DealCards()
-        {
-            for(int i = 0; i < 5; i++)
-            {
-                if(dealtCards[i] == null)
-                {
-                    dealtCards[i] = deck[0];
-                    deck.Remove(deck[0]);
-                }
             }
         }
 
@@ -95,66 +83,12 @@ namespace VideoPoker
 
         private void InitializeGame()
         {
-            betSize = reader.GetBetSize();
+            betSize = reader.GetBetSize(ref balance);
             balance -= betSize;
 
             Console.Clear();
             Console.WriteLine("New game began\n");
             Console.WriteLine("Initial cards:\n");
-        }
-
-
-        private void ChangeCards()
-        {
-            List<int> inputOfCardsIndexesToKeep = reader.GetIndexesToKeep();
-
-            List<int> tempIndexes = new List<int>() { 1, 2, 3, 4, 5 };
-
-            List<int> cardsIndexesToChange = tempIndexes.Except(inputOfCardsIndexesToKeep).ToList();
-
-            for (int i = 0; i < cardsIndexesToChange.Count; i++)
-            {
-                dealtCards[cardsIndexesToChange[i]-1] = null;
-            }
-
-            DealCards();
-            return;
-        }
-
-        private List<Card> GenerateDeck()
-        {
-            List<Card> deck = new List<Card>();
-
-            for (int i = 2; i < 15; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    Card card = new Card((CardRanks)i, (CardSuits)j);
-                    deck.Add(card);
-                }
-            }
-
-            List<Card> shuffledDeck = new List<Card>();
-
-            int[] randomCardsIndexes = Enumerable.Range(0, 52).ToArray().OrderBy(x => random.Next()).ToArray();
-            for (int i = 0; i < 52; i++)
-            {
-                shuffledDeck.Add(deck[randomCardsIndexes[i]]);
-            }
-
-            return shuffledDeck;
-        }
-
-        public static bool IsDigitsOnly(string[] str)
-        {
-            foreach (string s in str)
-            {
-                if (!int.TryParse(s, out int n))
-                {
-                    return false;
-                }
-            }
-            return true;
         }
     }
 }
