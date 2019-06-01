@@ -8,9 +8,11 @@ namespace VideoPoker
 {
     class Dealer
     {
-
-
-        public void DealCards(ref Card[] dealtCards, ref List<Card> deck)
+        public List<Card> deck = new List<Card>();
+        public Card[] dealtCards = new Card[5];
+        
+        
+        public void DealCards()
         {
             for (int i = 0; i < 5; i++)
             {
@@ -48,9 +50,9 @@ namespace VideoPoker
             return shuffledDeck;
         }
 
-        public void ChangeCards(ref Card[] dealtCards, ref List<Card> deck)
+        public void ChangeCards()
         {
-            Reader reader = new Reader();
+            View reader = new View();
 
             List<int> inputOfCardsIndexesToKeep = reader.GetIndexesToKeep();
 
@@ -63,9 +65,8 @@ namespace VideoPoker
                 dealtCards[cardsIndexesToChange[i] - 1] = null;
             }
 
-            DealCards(ref dealtCards, ref deck);
+            DealCards();
             return;
         }
-
     }
 }

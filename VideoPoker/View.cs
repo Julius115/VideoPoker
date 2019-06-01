@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VideoPoker
 {
-    class Reader
+    class View
     {
         public List<int> GetIndexesToKeep()
         {
@@ -86,6 +86,24 @@ namespace VideoPoker
             }
 
             return betSize;
+        }
+
+        public void PrintGameResult(HandCombinationTypes handCombination, int balance, int result)
+        {
+            
+            Console.WriteLine("\n" + handCombination + "\n");
+            Console.WriteLine("You have won : " + result + ", your balance now is: " + balance);
+
+            if (balance == 0)
+            {
+                Console.WriteLine("\nYou lost all your balance\n");
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("\nPress any key to play again");
+            Console.ReadKey();
         }
 
         private bool IsDigitsOnly(string[] str)

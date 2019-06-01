@@ -8,10 +8,7 @@ namespace VideoPoker
 {
     class Game
     {
-        List<Card> deck = new List<Card>();
-        Card[] dealtCards = new Card[5];
-
-        Reader reader = new Reader();
+        View view = new View();
         Dealer dealer = new Dealer();
 
         private int balance = 0;
@@ -23,72 +20,49 @@ namespace VideoPoker
             Console.WriteLine("Welcome to Video Poker \"Jacks or Better\" game\n");
             Console.WriteLine("Enter your starting balance:");
 
-            balance = reader.GetBalance();
+            balance = view.GetBalance();
 
             Console.WriteLine();
 
             while (balance != 0)
             {
-                InitializeGame();
+                dealer.dealtCards = new Card[5];
 
-                deck = dealer.GenerateDeck();
+                betSize = view.GetBetSize(ref balance);
+                balance -= betSize;
 
-                dealtCards = new Card[5];
+                Console.Clear();
+                Console.WriteLine("New game began\n");
+                Console.WriteLine("Initial cards:\n");
 
-                dealer.DealCards(ref dealtCards, ref deck);
+                dealer.deck = dealer.GenerateDeck();
+
+                dealer.DealCards();
 
                 for (int i = 0; i < 5; i++)
                 {
-                    Console.WriteLine((i + 1) + ": " + dealtCards[i].ToString());
+                    Console.WriteLine((i + 1) + ": " + dealer.dealtCards[i].ToString());
                 }
 
-                dealer.ChangeCards(ref dealtCards, ref deck);
+                dealer.ChangeCards();
 
                 Console.Clear();
                 Console.WriteLine("Play cards after change:\n");
 
                 for (int i = 0; i < 5; i++)
                 {
-                    Console.WriteLine((i + 1) + ": " + dealtCards[i].ToString());
+                    Console.WriteLine((i + 1) + ": " + dealer.dealtCards[i].ToString());
                 }
 
-                PrintGameResult(dealtCards.Take(5).ToList());
+                HandCombinationTypes handCombination = HandCombination.GetHandCombination(dealer.dealtCards.ToList());
+
+                result = betSize * (int)handCombination;
+                balance += result;
+
+                view.PrintGameResult(handCombination, balance, result);
 
                 Console.Clear();
             }
-        }
-
-        private void PrintGameResult(List<Card> playCards)
-        {
-            HandCombinationTypes handCombination = HandCombination.GetHandCombination(playCards);
-
-            result = betSize * (int)handCombination;
-            balance += result;
-
-            Console.WriteLine("\n" + handCombination + "\n");
-            Console.WriteLine("You have won : " + result + ", your balance now is: " + balance);
-
-            if (balance == 0)
-            {
-                Console.WriteLine("\nYou lost all your balance\n");
-                Console.WriteLine("Press any key to exit...");
-                Console.ReadKey();
-                return;
-            }
-
-            Console.WriteLine("\nPress any key to play again");
-
-            Console.ReadKey();
-        }
-
-        private void InitializeGame()
-        {
-            betSize = reader.GetBetSize(ref balance);
-            balance -= betSize;
-
-            Console.Clear();
-            Console.WriteLine("New game began\n");
-            Console.WriteLine("Initial cards:\n");
         }
     }
 }
