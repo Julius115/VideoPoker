@@ -39,33 +39,26 @@ namespace VideoPoker
 
                 for (int i = 0; i < 5; i++)
                 {
-                    Console.WriteLine((i + 1) + ": " + playCards[i].Rank + " of " + playCards[i].Suit);
+                    Console.WriteLine((i + 1) + ": " + playCards[i].ToString());
                 }
 
-                List<int> cardsIndexesToChange = GetCardsIndexesToKeep();
-
-                for (int i = 0; i < cardsIndexesToChange.Count; i++)
-                {
-                    playCards[cardsIndexesToChange[i]].Rank = playCards[i + 5].Rank;
-                    playCards[cardsIndexesToChange[i]].Suit = playCards[i + 5].Suit;
-                }
+                ChangeCards(ref playCards);
 
                 Console.Clear();
                 Console.WriteLine("Play cards after change:\n");
 
                 for (int i = 0; i < 5; i++)
                 {
-                    Console.WriteLine((i + 1) + ": " + playCards[i].Rank + " of " + playCards[i].Suit);
+                    Console.WriteLine((i + 1) + ": " + playCards[i].ToString());
                 }
 
-                HandCombinationTypes handCombination = HandCombination.GetHandCombination(playCards);
+                HandCombinationTypes handCombination = HandCombination.GetHandCombination(playCards.Take(5).ToList());
 
                 result = betSize * (int)handCombination;
                 balance += result;
 
                 Console.WriteLine("\n" + handCombination + "\n");
                 Console.WriteLine("You have won : " + result + ", your balance now is: " + balance);
-
 
                 if (balance == 0)
                 {
@@ -82,75 +75,31 @@ namespace VideoPoker
             }
         }
 
-        private int GetBalance()
+        private void ChangeCards(ref List<Card> playCards)
         {
-            int balance;
-            string tempBalance = Console.ReadLine();
 
-            while (!Int32.TryParse(tempBalance, out balance) || balance <= 0)
-            {
-                if (Int32.TryParse(tempBalance, out int a) && a <= 0)
-                {
-                    Console.WriteLine("Balance must be positive");
-                }
-                else
-                {
-                    Console.WriteLine("Enter your starting balance as a number: ");
-                }
-                tempBalance = Console.ReadLine();
-            }
-            return balance;
-        }
-
-        private List<Card> GeneratePlayCards()
-        {
-            int[] randomCardsIndexes = new int[10];
-
-            for (int i = 0; i < randomCardsIndexes.Length; i++)
-            {
-                randomCardsIndexes[i] = -1;
-
-                while (randomCardsIndexes[i] == -1)
-                {
-                    int tempRandomCardIndex = random.Next(52);
-
-                    if (!randomCardsIndexes.Contains(tempRandomCardIndex))
-                    {
-                        randomCardsIndexes[i] = tempRandomCardIndex;
-                    }
-                }
-            }
-
-            List<Card> playCards = new List<Card>();
-            for(int i = 0; i < randomCardsIndexes.Length; i++)
-            {
-                playCards.Add(deck[randomCardsIndexes[i]]);
-            }
-
-            return playCards;
-        }
-
-        private List<Card> GenerateDeck()
-        {
-            List<Card> deck = new List<Card>();
-
-            for (int i = 2; i < 15; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    Card card = new Card((CardRanks)i, (CardSuits)j);
-                    deck.Add(card);
-                }
-            }
-
-            return deck;
-        }
-
-        private List<int> GetCardsIndexesToKeep()
-        {
-            List<int> inputOfCardsIndexesToKeep = new List<int>();
+            List<int> inputOfCardsIndexesToKeep = GetIndexesToKeep();
             List<int> cardsIndexesToChange = new List<int>();
 
+            for (int i = 0; i < 5; i++)
+            {
+                if (!inputOfCardsIndexesToKeep.Any(a => a == i + 1))
+                {
+                    cardsIndexesToChange.Add(i);
+                }
+            }
+
+            for (int i = 0; i < cardsIndexesToChange.Count; i++)
+            {
+                playCards[cardsIndexesToChange[i]] = playCards[i + 5];
+                //playCards[cardsIndexesToChange[i]].Suit = playCards[i + 5].Suit;
+            }
+
+        }
+
+        private List<int> GetIndexesToKeep()
+        {
+            List<int> inputOfCardsIndexesToKeep = new List<int>();
             bool isInputValid;
 
             do
@@ -176,15 +125,56 @@ namespace VideoPoker
 
             } while (!isInputValid);
 
-            for (int i = 0; i < 5; i++)
+            return inputOfCardsIndexesToKeep;
+        }
+
+        private int GetBalance()
+        {
+            int balance;
+            string tempBalance = Console.ReadLine();
+
+            while (!Int32.TryParse(tempBalance, out balance) || balance <= 0)
             {
-                if (!inputOfCardsIndexesToKeep.Any(a => a == i + 1))
+                if (Int32.TryParse(tempBalance, out int a) && a <= 0)
                 {
-                    cardsIndexesToChange.Add(i);
+                    Console.WriteLine("Balance must be positive");
+                }
+                else
+                {
+                    Console.WriteLine("Enter your starting balance as a number: ");
+                }
+                tempBalance = Console.ReadLine();
+            }
+            return balance;
+        }
+
+        private List<Card> GeneratePlayCards()
+        {
+            int[] randomizedCardsIndexes = Enumerable.Range(0, 52).ToArray().OrderBy(x => random.Next()).ToArray();
+            List<Card> playCards = new List<Card>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                playCards.Add(deck[randomizedCardsIndexes[i]]);
+            }
+
+            return playCards;
+        }
+
+        private List<Card> GenerateDeck()
+        {
+            List<Card> deck = new List<Card>();
+
+            for (int i = 2; i < 15; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    Card card = new Card((CardRanks)i, (CardSuits)j);
+                    deck.Add(card);
                 }
             }
 
-            return cardsIndexesToChange;
+            return deck;
         }
 
         private bool IsDigitsOnly(string[] str)

@@ -41,5 +41,13 @@ namespace VideoPoker
             Rank = cardRank;
             Suit = cardSuit;
         }
+
+        public override string ToString()
+        {
+            return (this.Rank + " of " + this.Suit);
+        }
     }
+
+    
+
 }
