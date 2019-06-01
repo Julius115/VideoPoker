@@ -17,42 +17,26 @@ namespace VideoPoker
 
         public void Start()
         {
-            Console.WriteLine("Welcome to Video Poker \"Jacks or Better\" game\n");
-            Console.WriteLine("Enter your starting balance:");
+            view.PrintWelcome();
 
-            balance = view.GetBalance();
+            balance = view.ReadBalance();
 
             Console.WriteLine();
 
-            while (balance != 0)
+            while (balance > 0)
             {
                 dealer.dealtCards = new Card[5];
 
-                betSize = view.GetBetSize(ref balance);
+                betSize = view.ReadBetSize(ref balance);
                 balance -= betSize;
 
-                Console.Clear();
-                Console.WriteLine("New game began\n");
-                Console.WriteLine("Initial cards:\n");
+                view.PrintNewGame();
 
                 dealer.deck = dealer.GenerateDeck();
 
                 dealer.DealCards();
 
-                for (int i = 0; i < 5; i++)
-                {
-                    Console.WriteLine((i + 1) + ": " + dealer.dealtCards[i].ToString());
-                }
-
-                dealer.ChangeCards();
-
-                Console.Clear();
-                Console.WriteLine("Play cards after change:\n");
-
-                for (int i = 0; i < 5; i++)
-                {
-                    Console.WriteLine((i + 1) + ": " + dealer.dealtCards[i].ToString());
-                }
+                dealer.DiscardCards();
 
                 HandCombinationTypes handCombination = HandCombination.GetHandCombination(dealer.dealtCards.ToList());
 

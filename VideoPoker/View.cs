@@ -8,7 +8,7 @@ namespace VideoPoker
 {
     class View
     {
-        public List<int> GetIndexesToKeep()
+        public List<int> ReadIndexesToKeep()
         {
             List<int> inputOfCardsIndexesToKeep = new List<int>();
             bool isInputValid;
@@ -39,7 +39,7 @@ namespace VideoPoker
             return inputOfCardsIndexesToKeep;
         }
 
-        public int GetBalance()
+        public int ReadBalance()
         {
             int balance;
             string tempBalance = Console.ReadLine();
@@ -59,7 +59,7 @@ namespace VideoPoker
             return balance;
         }
 
-        public int GetBetSize(ref int balance)
+        public int ReadBetSize(ref int balance)
         {
             Console.WriteLine("Enter bet size:");
             string tempBetSize = Console.ReadLine();
@@ -86,6 +86,19 @@ namespace VideoPoker
             }
 
             return betSize;
+        }
+
+        public void PrintWelcome()
+        {
+            Console.WriteLine("Welcome to Video Poker \"Jacks or Better\" game\n");
+            Console.WriteLine("Enter your starting balance:");
+        }
+
+        public void PrintNewGame()
+        {
+            Console.Clear();
+            Console.WriteLine("New game began\n");
+            Console.WriteLine("Initial cards:\n");
         }
 
         public void PrintGameResult(HandCombinationTypes handCombination, int balance, int result)

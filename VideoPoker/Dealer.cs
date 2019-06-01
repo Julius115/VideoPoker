@@ -22,6 +22,8 @@ namespace VideoPoker
                     deck.Remove(deck[0]);
                 }
             }
+
+            DisplayCards();
         }
 
         public List<Card> GenerateDeck()
@@ -50,11 +52,11 @@ namespace VideoPoker
             return shuffledDeck;
         }
 
-        public void ChangeCards()
+        public void DiscardCards()
         {
             View reader = new View();
 
-            List<int> inputOfCardsIndexesToKeep = reader.GetIndexesToKeep();
+            List<int> inputOfCardsIndexesToKeep = reader.ReadIndexesToKeep();
 
             List<int> tempIndexes = new List<int>() { 1, 2, 3, 4, 5 };
 
@@ -66,7 +68,20 @@ namespace VideoPoker
             }
 
             DealCards();
+
+            Console.Clear();
+            Console.WriteLine("Play cards after change:\n");
+
+            DisplayCards();
             return;
+        }
+
+        private void DisplayCards()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Console.WriteLine((i + 1) + ": " + dealtCards[i].ToString());
+            }
         }
     }
 }
