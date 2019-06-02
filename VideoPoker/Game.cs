@@ -39,14 +39,15 @@ namespace VideoPoker
 
                 dealer.DiscardCards();
 
-                //Card[] cards = new Card[] { new Card(CardRanks.Jack, CardSuits.Spades),
-                //                            new Card(CardRanks.Jack, CardSuits.Hearts),
-                //                            new Card(CardRanks.Jack, CardSuits.Clubs),
-                //                            new Card(CardRanks.Five, CardSuits.Clubs),
-                //                            new Card(CardRanks.Five, CardSuits.Diamonds)
+                //Card[] cards = new Card[] { new Card(CardRanks.Seven, CardSuits.Diamonds),
+                //                            new Card(CardRanks.Ten, CardSuits.Diamonds),
+                //                            new Card(CardRanks.Four, CardSuits.Diamonds),
+                //                            new Card(CardRanks.Queen, CardSuits.Diamonds),
+                //                            new Card(CardRanks.Eight, CardSuits.Clubs)
                 //                          };
-
+                //
                 //HandCombinations handCombination = handEvaluator.EvaluateHand(cards);
+
                 HandCombinations handCombination = handEvaluator.EvaluateHand(dealer.dealtCards);
 
                 result = betSize * (int)handCombination;
