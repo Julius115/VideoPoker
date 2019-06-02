@@ -22,6 +22,7 @@ namespace VideoPoker
 
     class HandEvaluator
     {
+        //private List<Card> cards = new List<Card>();
         private Card[] cards = new Card[5];
         //private List<Card> pairs;
 
@@ -30,9 +31,9 @@ namespace VideoPoker
 
         public HandCombinations EvaluateHand(Card[] cardsInput)
         {
+            // sorts 
+            cards = cardsInput.OrderBy(i => i.Rank).ToArray();
 
-            cards = SortCards(cardsInput);
-            
             HandCombinations handCombination = CheckStraightAndFlushCombinations();
 
             if (handCombination == HandCombinations.AllOther)
@@ -75,11 +76,6 @@ namespace VideoPoker
             return HandCombinations.AllOther;
         }
 
-        private Card[] SortCards(Card[] cardsInput)
-        {
-            return cardsInput.OrderBy(i => i.Rank).ToArray();
-        }
-
         private bool CheckFlush()
         {
             bool isFlush = !cards.Any(p => p.Suit != cards[0].Suit);
@@ -105,50 +101,64 @@ namespace VideoPoker
         private HandCombinations CheckDuplicates()
         {
             List<Card> pairs = new List<Card>();
+            var distinctRanks = cards.Select(x => x.Rank).Distinct().ToArray();
 
+            bool isOnePair = false;
+            bool isTwoPair = false;
             bool isThreeOfAKind = false;
+            bool isFourOfAkind = false;
+            bool isJacksOrBetter = false;
 
-            foreach (Card card in cards)
+            foreach (CardRanks distinctRank in distinctRanks)
             {
-                int amountOfDuplicates = cards.Where(p => p.Rank == card.Rank).ToList().Count;
+                int amountOfDuplicates = cards.Where(p => p.Rank == distinctRank).ToList().Count;
 
                 if (amountOfDuplicates == 4)
                 {
-                    return HandCombinations.FourOfAKind;
+                    isFourOfAkind = true;
+                    break;
                 }
 
                 if (amountOfDuplicates == 3)
                 {
-                    if (!pairs.Any(p => p.Rank == card.Rank))
-                    {
-                        pairs.Add(card);
-                    }
                     isThreeOfAKind = true;
-                    if (pairs.Count == 2)
-                    {
-                        return HandCombinations.FullHouse;
-                    }
                 }
                 if (amountOfDuplicates == 2)
                 {
-                    if (!pairs.Any(p => p.Rank == card.Rank))
+                    if (!isOnePair) {
+                        isOnePair = true;
+                        if (distinctRank > CardRanks.Ten)
+                        {
+                            isJacksOrBetter = true;
+                        }
+                    }
+                    else
                     {
-                        pairs.Add(card);
+                        isTwoPair = false;
                     }
                 }
+            }
+            
+            if (isFourOfAkind)
+            {
+                return HandCombinations.JacksOrBetter;
             }
 
             if (isThreeOfAKind)
             {
+                if (isOnePair)
+                {
+                    return HandCombinations.FullHouse;
+                }
                 return HandCombinations.ThreeOfAKind;
             }
 
-            if(pairs.Count == 2)
+            if (isTwoPair)
             {
                 return HandCombinations.TwoPair;
             }
 
-            if (pairs.Count == 1 && pairs[0].Rank > CardRanks.Ten)
+            if (isJacksOrBetter)
             {
                 return HandCombinations.JacksOrBetter;
             }
