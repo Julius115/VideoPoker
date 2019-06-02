@@ -22,8 +22,6 @@ namespace VideoPoker
 
             balance = view.ReadBalance();
 
-            Console.WriteLine();
-
             while (balance > 0)
             {
                 dealer.dealtCards = new Card[5];
@@ -39,7 +37,9 @@ namespace VideoPoker
 
                 view.DisplayCards(dealer.dealtCards);
 
-                dealer.DiscardCards();
+                List<int> inputOfCardsIndexesToKeep = view.ReadIndexesToKeep();
+
+                dealer.DiscardCards(inputOfCardsIndexesToKeep);
 
                 view.DisplayCardsAfterChange(dealer.dealtCards);
 
@@ -59,7 +59,7 @@ namespace VideoPoker
 
                 view.PrintGameResult(handCombination, balance, result);
 
-                Console.Clear();
+
             }
         }
     }

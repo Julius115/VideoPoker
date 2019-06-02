@@ -49,12 +49,8 @@ namespace VideoPoker
             deck = shuffledDeck;
         }
 
-        public void DiscardCards()
+        public void DiscardCards(List<int> inputOfCardsIndexesToKeep)
         {
-            View reader = new View();
-
-            List<int> inputOfCardsIndexesToKeep = reader.ReadIndexesToKeep();
-
             List<int> tempIndexes = new List<int>() { 1, 2, 3, 4, 5 };
 
             List<int> cardsIndexesToChange = tempIndexes.Except(inputOfCardsIndexesToKeep).ToList();

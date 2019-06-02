@@ -56,6 +56,8 @@ namespace VideoPoker
                 }
                 tempBalance = Console.ReadLine();
             }
+
+            Console.WriteLine();
             return balance;
         }
 
@@ -117,6 +119,8 @@ namespace VideoPoker
 
             Console.WriteLine("\nPress any key to play again");
             Console.ReadKey();
+
+            Console.Clear();
         }
 
         public void DisplayCardsAfterChange(Card[] dealtCards)

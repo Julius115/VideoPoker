@@ -42,24 +42,59 @@ namespace VideoPoker
             Suit = cardSuit;
         }
 
-        public override string ToString()
+        private string ChangeForPrint()
         {
+            string rank = null;
+            string suit = null;
+
+            if (Rank < CardRanks.Ten)
+            {
+                rank = ((int)Rank).ToString();
+            }
+            else if (Rank == CardRanks.Ten)
+            {
+                rank = "T";
+            }
+            else if (Rank == CardRanks.Jack)
+            {
+                rank = "J";
+            }
+            else if (Rank == CardRanks.Queen)
+            {
+                rank = "Q";
+            }
+            else if (Rank == CardRanks.King)
+            {
+                rank = "K";
+            }
+            else if (Rank == CardRanks.Ace)
+            {
+                rank = "A";
+            }
+
             if (this.Suit == CardSuits.Diamonds)
             {
-                return (this.Rank + " ♦");
+                suit = "♦";
             }
             else if (this.Suit == CardSuits.Clubs)
             {
-                return (this.Rank + " ♣");
+                suit = "♣";
             }
             else if (this.Suit == CardSuits.Hearts)
             {
-                return (this.Rank + " ♥");
+                suit = "♥";
             }
-            else
+            else if (this.Suit == CardSuits.Spades)
             {
-                return (this.Rank + " ♠");
+                suit = "♠";
             }
+
+            return String.Concat(rank, suit);
+        }
+
+        public override string ToString()
+        {
+            return (ChangeForPrint());
         }
     }
 }
