@@ -83,6 +83,7 @@ namespace VideoPoker
                     break;
                 }
             }
+
             return isStraight;
         }
 
@@ -106,19 +107,20 @@ namespace VideoPoker
 
             foreach (CardRanks distinctRank in distinctRanks)
             {
-                int duplicatesCount = cards.Where(p => p.Rank == distinctRank).ToList().Count;
+                int matchesCount = cards.Where(p => p.Rank == distinctRank).ToList().Count;
 
-                if (duplicatesCount == 4)
+                if (matchesCount == 4)
                 {
                     isFourOfAkind = true;
                     break;
                 }
 
-                if (duplicatesCount == 3)
+                if (matchesCount == 3)
                 {
                     isThreeOfAKind = true;
                 }
-                if (duplicatesCount == 2)
+
+                if (matchesCount == 2)
                 {
                     if (!isOnePair) {
                         isOnePair = true;

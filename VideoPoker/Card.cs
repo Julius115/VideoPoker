@@ -44,10 +44,22 @@ namespace VideoPoker
 
         public override string ToString()
         {
-            return (this.Rank + " of " + this.Suit);
+            if (this.Suit == CardSuits.Diamonds)
+            {
+                return (this.Rank + " ♦");
+            }
+            else if (this.Suit == CardSuits.Clubs)
+            {
+                return (this.Rank + " ♣");
+            }
+            else if (this.Suit == CardSuits.Hearts)
+            {
+                return (this.Rank + " ♥");
+            }
+            else
+            {
+                return (this.Rank + " ♠");
+            }
         }
     }
-
-    
-
 }

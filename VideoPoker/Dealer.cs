@@ -21,15 +21,10 @@ namespace VideoPoker
                     deck.Remove(deck[0]);
                 }
             }
-
-            DisplayCards();
         }
 
         public void ShuffleDeck()
         {
-
-            Random random = new Random();
-
             List<Card> newDeck = new List<Card>();
 
             for (int i = 2; i < 15; i++)
@@ -42,6 +37,8 @@ namespace VideoPoker
             }
 
             List<Card> shuffledDeck = new List<Card>();
+
+            Random random = new Random();
 
             int[] randomCardsIndexes = Enumerable.Range(0, 52).ToArray().OrderBy(x => random.Next()).ToArray();
             for (int i = 0; i < 52; i++)
@@ -69,19 +66,7 @@ namespace VideoPoker
 
             DealCards();
 
-            Console.Clear();
-            Console.WriteLine("Play cards after change:\n");
-
-            DisplayCards();
             return;
-        }
-
-        private void DisplayCards()
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                Console.WriteLine((i + 1) + ": " + dealtCards[i].ToString());
-            }
         }
     }
 }

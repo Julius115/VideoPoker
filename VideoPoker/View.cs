@@ -15,7 +15,7 @@ namespace VideoPoker
 
             do
             {
-                Console.WriteLine("\nEnter indexes of cards you want to keep(numbers separated with single space):");
+                Console.WriteLine("\nEnter indexes of cards you want to keep (numbers separated with single space):");
                 string[] tempinputOfCardsIndexesToKeep = Console.ReadLine().Split(' ');
 
                 if (tempinputOfCardsIndexesToKeep.Length == 1 && String.IsNullOrEmpty(tempinputOfCardsIndexesToKeep[0]))
@@ -61,6 +61,7 @@ namespace VideoPoker
 
         public int ReadBetSize(ref int balance)
         {
+            Console.WriteLine("Your balance: " + balance + "\n");
             Console.WriteLine("Enter bet size:");
             string tempBetSize = Console.ReadLine();
             int betSize;
@@ -103,7 +104,6 @@ namespace VideoPoker
 
         public void PrintGameResult(HandCombinations handCombination, int balance, int result)
         {
-            
             Console.WriteLine("\n" + handCombination + "\n");
             Console.WriteLine("You have won : " + result + ", your balance now is: " + balance);
 
@@ -117,6 +117,22 @@ namespace VideoPoker
 
             Console.WriteLine("\nPress any key to play again");
             Console.ReadKey();
+        }
+
+        public void DisplayCardsAfterChange(Card[] dealtCards)
+        {
+            Console.Clear();
+            Console.WriteLine("Play cards after change:\n");
+
+            DisplayCards(dealtCards);
+        }
+
+        public void DisplayCards(Card[] dealtCards)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Console.WriteLine((i + 1) + ": " + dealtCards[i].ToString());
+            }
         }
 
         private bool IsDigitsOnly(string[] str)

@@ -37,7 +37,11 @@ namespace VideoPoker
 
                 dealer.DealCards();
 
+                view.DisplayCards(dealer.dealtCards);
+
                 dealer.DiscardCards();
+
+                view.DisplayCardsAfterChange(dealer.dealtCards);
 
                 //Card[] cards = new Card[] { new Card(CardRanks.Seven, CardSuits.Diamonds),
                 //                            new Card(CardRanks.Ten, CardSuits.Diamonds),
