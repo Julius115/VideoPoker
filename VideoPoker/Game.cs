@@ -10,6 +10,7 @@ namespace VideoPoker
     {
         View view = new View();
         Dealer dealer = new Dealer();
+        HandEvaluator handEvaluator = new HandEvaluator();
 
         private int balance = 0;
         private int betSize = 0;
@@ -32,13 +33,13 @@ namespace VideoPoker
 
                 view.PrintNewGame();
 
-                dealer.deck = dealer.GenerateDeck();
+                dealer.ShuffleDeck();
 
                 dealer.DealCards();
 
                 dealer.DiscardCards();
 
-                HandCombinationTypes handCombination = HandCombination.GetHandCombination(dealer.dealtCards.ToList());
+                HandCombinations handCombination = handEvaluator.EvaluateHand(dealer.SortCards());
 
                 result = betSize * (int)handCombination;
                 balance += result;

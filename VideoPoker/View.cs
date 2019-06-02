@@ -101,7 +101,7 @@ namespace VideoPoker
             Console.WriteLine("Initial cards:\n");
         }
 
-        public void PrintGameResult(HandCombinationTypes handCombination, int balance, int result)
+        public void PrintGameResult(HandCombinations handCombination, int balance, int result)
         {
             
             Console.WriteLine("\n" + handCombination + "\n");

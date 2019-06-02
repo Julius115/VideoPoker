@@ -11,7 +11,6 @@ namespace VideoPoker
         public List<Card> deck = new List<Card>();
         public Card[] dealtCards = new Card[5];
         
-        
         public void DealCards()
         {
             for (int i = 0; i < 5; i++)
@@ -26,18 +25,24 @@ namespace VideoPoker
             DisplayCards();
         }
 
-        public List<Card> GenerateDeck()
+        public List<Card> SortCards()
         {
+            return dealtCards.OrderBy(i => i.Rank).ToList();
+        }
+
+        public void ShuffleDeck()
+        {
+
             Random random = new Random();
 
-            List<Card> deck = new List<Card>();
+            List<Card> newDeck = new List<Card>();
 
             for (int i = 2; i < 15; i++)
             {
                 for (int j = 0; j < 4; j++)
                 {
                     Card card = new Card((CardRanks)i, (CardSuits)j);
-                    deck.Add(card);
+                    newDeck.Add(card);
                 }
             }
 
@@ -46,10 +51,10 @@ namespace VideoPoker
             int[] randomCardsIndexes = Enumerable.Range(0, 52).ToArray().OrderBy(x => random.Next()).ToArray();
             for (int i = 0; i < 52; i++)
             {
-                shuffledDeck.Add(deck[randomCardsIndexes[i]]);
+                shuffledDeck.Add(newDeck[randomCardsIndexes[i]]);
             }
 
-            return shuffledDeck;
+            deck = shuffledDeck;
         }
 
         public void DiscardCards()
