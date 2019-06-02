@@ -43,23 +43,12 @@ namespace VideoPoker
 
                 view.DisplayCardsAfterChange(dealer.dealtCards);
 
-                //Card[] cards = new Card[] { new Card(CardRanks.Seven, CardSuits.Diamonds),
-                //                            new Card(CardRanks.Ten, CardSuits.Diamonds),
-                //                            new Card(CardRanks.Four, CardSuits.Diamonds),
-                //                            new Card(CardRanks.Queen, CardSuits.Diamonds),
-                //                            new Card(CardRanks.Eight, CardSuits.Clubs)
-                //                          };
-                //
-                //HandCombinations handCombination = handEvaluator.EvaluateHand(cards);
-
                 HandCombinations handCombination = handEvaluator.EvaluateHand(dealer.dealtCards);
 
                 result = betSize * (int)handCombination;
                 balance += result;
 
                 view.PrintGameResult(handCombination, balance, result);
-
-
             }
         }
     }

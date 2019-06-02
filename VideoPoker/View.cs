@@ -15,7 +15,7 @@ namespace VideoPoker
 
             do
             {
-                Console.WriteLine("\nEnter indexes of cards you want to keep (numbers separated with single space):");
+                Console.WriteLine("\nChoose cards to hold (numbers separated with single space):");
                 string[] tempinputOfCardsIndexesToKeep = Console.ReadLine().Split(' ');
 
                 if (tempinputOfCardsIndexesToKeep.Length == 1 && String.IsNullOrEmpty(tempinputOfCardsIndexesToKeep[0]))
@@ -54,10 +54,12 @@ namespace VideoPoker
                 {
                     Console.WriteLine("Enter your starting balance as a number: ");
                 }
+
                 tempBalance = Console.ReadLine();
             }
 
-            Console.WriteLine();
+            Console.Clear();
+
             return balance;
         }
 
@@ -93,27 +95,34 @@ namespace VideoPoker
 
         public void PrintWelcome()
         {
-            Console.WriteLine("Welcome to Video Poker \"Jacks or Better\" game\n");
+            Console.WriteLine("Welcome to Video Poker \"Jacks or Better\"\n");
             Console.WriteLine("Enter your starting balance:");
         }
 
         public void PrintNewGame()
         {
             Console.Clear();
-            Console.WriteLine("New game began\n");
-            Console.WriteLine("Initial cards:\n");
+            Console.WriteLine("Your hand:\n");
         }
 
         public void PrintGameResult(HandCombinations handCombination, int balance, int result)
         {
             Console.WriteLine("\n" + handCombination + "\n");
-            Console.WriteLine("You have won : " + result + ", your balance now is: " + balance);
+            if (result == 0)
+            {
+                Console.WriteLine("You have lost, your balance now is: " + balance);
+            }
+            else
+            {
+                Console.WriteLine("You have won: " + result + ", your balance now is: " + balance);
+            }
 
             if (balance == 0)
             {
                 Console.WriteLine("\nYou lost all your balance\n");
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadKey();
+
                 return;
             }
 
@@ -126,8 +135,9 @@ namespace VideoPoker
         public void DisplayCardsAfterChange(Card[] dealtCards)
         {
             Console.Clear();
-            Console.WriteLine("Play cards after change:\n");
 
+            Console.WriteLine("Your hand after draw:\n");
+            
             DisplayCards(dealtCards);
         }
 
@@ -148,6 +158,7 @@ namespace VideoPoker
                     return false;
                 }
             }
+
             return true;
         }
     }

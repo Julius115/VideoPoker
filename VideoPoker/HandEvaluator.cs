@@ -26,7 +26,7 @@ namespace VideoPoker
 
         public HandCombinations EvaluateHand(Card[] cardsInput)
         {
-            // sorts cards in ascending order
+            // Sorts cards in ascending order
             cards = cardsInput.OrderBy(i => i.Rank).ToArray();
 
             HandCombinations handCombination = CheckStraightAndFlushCombinations();

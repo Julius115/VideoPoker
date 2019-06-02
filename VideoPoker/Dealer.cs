@@ -11,6 +11,7 @@ namespace VideoPoker
         public List<Card> deck = new List<Card>();
         public Card[] dealtCards = new Card[5];
         
+        // Populates dealtCards empty elements with cards from deck
         public void DealCards()
         {
             for (int i = 0; i < 5; i++)
@@ -23,6 +24,7 @@ namespace VideoPoker
             }
         }
 
+        // Generates new deck and shuffles it
         public void ShuffleDeck()
         {
             List<Card> newDeck = new List<Card>();
@@ -49,6 +51,7 @@ namespace VideoPoker
             deck = shuffledDeck;
         }
 
+        // Makes cards null in dealtCards, if its index wasn't specified in parameter 
         public void DiscardCards(List<int> inputOfCardsIndexesToKeep)
         {
             List<int> tempIndexes = new List<int>() { 1, 2, 3, 4, 5 };
@@ -61,8 +64,6 @@ namespace VideoPoker
             }
 
             DealCards();
-
-            return;
         }
     }
 }

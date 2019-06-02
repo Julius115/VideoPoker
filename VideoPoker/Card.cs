@@ -42,6 +42,7 @@ namespace VideoPoker
             Suit = cardSuit;
         }
 
+        // Method to return string representation of card
         private string ChangeForPrint()
         {
             string rank = null;
@@ -72,19 +73,19 @@ namespace VideoPoker
                 rank = "A";
             }
 
-            if (this.Suit == CardSuits.Diamonds)
+            if (Suit == CardSuits.Diamonds)
             {
                 suit = "♦";
             }
-            else if (this.Suit == CardSuits.Clubs)
+            else if (Suit == CardSuits.Clubs)
             {
                 suit = "♣";
             }
-            else if (this.Suit == CardSuits.Hearts)
+            else if (Suit == CardSuits.Hearts)
             {
                 suit = "♥";
             }
-            else if (this.Suit == CardSuits.Spades)
+            else if (Suit == CardSuits.Spades)
             {
                 suit = "♠";
             }
