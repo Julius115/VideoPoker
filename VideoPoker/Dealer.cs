@@ -25,11 +25,6 @@ namespace VideoPoker
             DisplayCards();
         }
 
-        public List<Card> SortCards()
-        {
-            return dealtCards.OrderBy(i => i.Rank).ToList();
-        }
-
         public void ShuffleDeck()
         {
 

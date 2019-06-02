@@ -39,7 +39,15 @@ namespace VideoPoker
 
                 dealer.DiscardCards();
 
-                HandCombinations handCombination = handEvaluator.EvaluateHand(dealer.SortCards());
+                //Card[] cards = new Card[] { new Card(CardRanks.Jack, CardSuits.Spades),
+                //                            new Card(CardRanks.Jack, CardSuits.Hearts),
+                //                            new Card(CardRanks.Jack, CardSuits.Clubs),
+                //                            new Card(CardRanks.Five, CardSuits.Clubs),
+                //                            new Card(CardRanks.Five, CardSuits.Diamonds)
+                //                          };
+
+                //HandCombinations handCombination = handEvaluator.EvaluateHand(cards);
+                HandCombinations handCombination = handEvaluator.EvaluateHand(dealer.dealtCards);
 
                 result = betSize * (int)handCombination;
                 balance += result;
