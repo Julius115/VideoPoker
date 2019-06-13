@@ -10,7 +10,8 @@ namespace VideoPoker
     {
         public List<Card> deck = new List<Card>();
         public Card[] dealtCards = new Card[5];
-        
+        List<int> indexesForCardsChange = new List<int>() { 1, 2, 3, 4, 5 };
+
         // Populates dealtCards empty elements with cards from deck
         public void DealCards()
         {
@@ -54,9 +55,7 @@ namespace VideoPoker
         // Makes cards null in dealtCards, if its index wasn't specified in parameter 
         public void DiscardCards(List<int> inputOfCardsIndexesToKeep)
         {
-            List<int> tempIndexes = new List<int>() { 1, 2, 3, 4, 5 };
-
-            List<int> cardsIndexesToChange = tempIndexes.Except(inputOfCardsIndexesToKeep).ToList();
+            List<int> cardsIndexesToChange = indexesForCardsChange.Except(inputOfCardsIndexesToKeep).ToList();
 
             for (int i = 0; i < cardsIndexesToChange.Count; i++)
             {

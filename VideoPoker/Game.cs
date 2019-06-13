@@ -26,7 +26,7 @@ namespace VideoPoker
             {
                 dealer.dealtCards = new Card[5];
 
-                betSize = view.ReadBetSize(ref balance);
+                betSize = view.ReadBetSize(balance);
                 balance -= betSize;
 
                 view.PrintNewGame();

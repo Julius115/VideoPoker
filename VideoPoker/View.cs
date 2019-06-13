@@ -63,7 +63,7 @@ namespace VideoPoker
             return balance;
         }
 
-        public int ReadBetSize(ref int balance)
+        public int ReadBetSize(int balance)
         {
             Console.WriteLine("Your balance: " + balance + "\n");
             Console.WriteLine("Enter bet size:");
